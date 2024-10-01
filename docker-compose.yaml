@@ -1,0 +1,35 @@
+services:
+  api:
+    build: ./
+    container_name: expenseserver-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - expenseserver-db  # Ensure the DB starts before the API
+    environment:
+      # Add necessary environment variables for your API to connect to the DB
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+  expenseserver-db:
+    image: postgres
+    container_name: expenseserver-db
+    ports:
+      - "5432:5432" #left side is the host, right side is the container
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      
+
+volumes:
+  postgres_data:
+
+    #first time running
+    #docker-compose up --build -d
+
+    #other time
+    #docker-compose up -d
