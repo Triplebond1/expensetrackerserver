@@ -1,21 +1,29 @@
-const { Datatypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
 const Category = sequelize.define(
-  "Category",
+  "category",
   {
     id: {
-      type: Datatypes.UUID,
-      defaultValue: Datatypes.UUIDV4,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
 
     name: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    freezeTableName: true,
+    tableName: "category",
+  }
 );
 
-module.exports = Category;
+Category.associate = (models) => {
+  Category.hasMany(models.Expense);
+};
+
+module.exports = { Category };

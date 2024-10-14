@@ -1,15 +1,20 @@
 const { Sequelize } = require("sequelize");
+const config = require("./config/config.js");
+
+//console.log("DB_HOST". config.development.host)
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  config.development.database,
+  config.development.username,
+  config.development.password,
   {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    host: config.development.host,
+    port: config.development.port,
     dialect: "postgres",
   }
-)(async () => {
+);
+
+(async () => {
   try {
     await sequelize.authenticate();
     console.log("connection has been esteblished succesfully");

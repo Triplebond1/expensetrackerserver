@@ -1,34 +1,46 @@
-const { Datatypes } = require("sequelize");
-const sequelize = require("../db");
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../db"); 
 
 const User = sequelize.define(
-  "User",
+  "users",
   {
     id: {
-      type: Datatypes.UUID,
-      defaultValue: Datatypes.UUIDV4,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4, // Automatically generate UUID
       primaryKey: true,
     },
-
     name: {
-      type: Datatypes.STRING,
-      allowNull: false,
-    },
-
-    email: {
-      type: Datatypes.STRING,
-      allowNull: false,
-      unique: true,
+      type: DataTypes.STRING,
+      allowNull: false, // Name is required
       validate: {
-        isEmail: true,
+        notEmpty: true, // Prevent empty strings
+      },
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false, // Email is required
+      unique: true, // Ensure unique emails
+      validate: {
+        isEmail: true, // Validate email format
       },
     },
     password: {
-      type: Datatypes.STRING,
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: false, // Password is required
+      validate: {
+        notEmpty: true, // Prevent empty strings
+      },
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true, // Adds createdAt and updatedAt
+    tableName: "users", // Optional: specify table name
+    freezeTableName: true,
+  }
 );
 
-module.exports = User;
+User.associate = (models) => {
+  User.hasMany(models.Expense);
+};
+module.exports = { User };
